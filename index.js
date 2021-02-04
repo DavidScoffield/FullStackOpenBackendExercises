@@ -22,6 +22,21 @@ let persons = [
     number: '39-23-6423122',
     id: 4,
   },
+  {
+    name: 'Mary Archia',
+    number: '39-23-663233122',
+    id: 5,
+  },
+  {
+    name: 'jose adwaendieck',
+    number: '39-21*55423122',
+    id: 6,
+  },
+  {
+    name: 'Ban Armenio',
+    number: '39-23-6423122',
+    id: 7,
+  },
 ]
 
 app.get('/api/persons', (req, res) => {
@@ -45,7 +60,14 @@ app.get('/api/persons/:id', (req, res) => {
   }
 })
 
-const PORT = 3001
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  persons = persons.filter((person) => person.id !== id)
+
+  res.status(204).end()
+})
+
+const PORT = 30017
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
