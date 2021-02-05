@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 app.use(express.json())
 
 let persons = [
@@ -75,7 +77,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const id = generateRandomID()
-  const person = req.body
+  let person = req.body
 
   if (!(person.name && person.number)) {
     return res.status(404).json({
@@ -89,8 +91,11 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
+  person = { ...person, id }
+
   persons = persons.concat(person)
-  res.send(`${person.name} is sucefully added`)
+  console.log(`-${person.name} is sucefully added!!`)
+  res.send(person)
 })
 
 const PORT = 3001
