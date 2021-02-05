@@ -43,6 +43,8 @@ let persons = [
 
 const generateRandomID = () => Math.round(Math.random() * 1000000)
 
+const isInDiary = (name) => persons.find((person) => person.name === name)
+
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
@@ -81,8 +83,14 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
+  if (isInDiary(person.name)) {
+    return res.status(404).json({
+      error: 'name must be unique',
+    })
+  }
+
   persons = persons.concat(person)
-  res.send('good')
+  res.send(`${person.name} is sucefully added`)
 })
 
 const PORT = 3001
