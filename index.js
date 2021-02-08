@@ -39,10 +39,15 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter((person) => person.id !== id)
-
-  res.status(204).end()
+  Person.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      console.log(`${result.name} is sucefully removed!👌`)
+      res.status(204).end()
+    })
+    .catch((error) => {
+      console.log(error.message)
+      res.status(400).end()
+    })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -62,10 +67,13 @@ app.post('/api/persons', (req, res) => {
 
   person = new Person({ ...person })
 
-  person.save().then((savedPerson) => {
-    console.log(`-${savedPerson.name} is sucefully added!!`)
-    res.send(savedPerson)
-  })
+  person
+    .save()
+    .then((savedPerson) => {
+      console.log(`-${savedPerson.name} is sucefully added!!`)
+      res.send(savedPerson)
+    })
+    .catch((error) => console.log(error.message))
 })
 
 const PORT = process.env.PORT
