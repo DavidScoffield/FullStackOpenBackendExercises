@@ -8,9 +8,9 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('build'))
 
-const generateRandomID = () => Math.round(Math.random() * 1000000)
+// const generateRandomID = () => Math.round(Math.random() * 1000000)
 
-const isInDiary = (name) => persons.find((person) => person.name === name)
+// const isInDiary = (name) => persons.find((person) => person.name === name)
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then((returnedPersons) => {
@@ -29,18 +29,29 @@ app.get('/info', (req, res, next) => {
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
-  Person.findById(req.params.id)
+  const { id } = req.params
+  Person.findById(id)
     .then((foundPerson) => {
-      res.json(foundPerson)
+      if (foundPerson) {
+        res.json(foundPerson)
+      } else {
+        msgIdWrong({ res, id })
+      }
     })
     .catch((err) => next(err))
 })
 
 app.delete('/api/persons/:id', (req, res, next) => {
-  Person.findByIdAndRemove(req.params.id)
+  const { id } = req.params
+
+  Person.findByIdAndRemove(id)
     .then((result) => {
-      console.log(` ✅ ${result.name} is sucefully removed!👌`)
-      res.status(204).end()
+      if (result) {
+        console.log(` ✅ ${result.name} is sucefully removed!👌`)
+        res.status(204).end()
+      } else {
+        msgIdWrong({ res, id })
+      }
     })
     .catch((error) => next(error))
 })
@@ -70,6 +81,33 @@ app.post('/api/persons', (req, res) => {
     })
     .catch((error) => next(error))
 })
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const body = req.body
+  const { id } = req.params
+
+  console.log(body, id)
+
+  const person = {
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(id, person, { new: true })
+    .then((updatedPerson) => {
+      if (updatedPerson) {
+        console.log(` ✅ ${updatedPerson.name} is sucefully updated!!`)
+        res.json(updatedPerson)
+      } else {
+        msgIdWrong({ res, id })
+      }
+    })
+    .catch((error) => next(error))
+})
+
+const msgIdWrong = ({ res, id }) => {
+  res.status(404).send({ error: `The id: ${id} does not exist` })
+  console.log(`❌ ${id} does not exist`)
+}
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
