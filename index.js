@@ -46,7 +46,6 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  // const id = generateRandomID()
   let person = req.body
 
   if (!(person.name && person.number)) {
@@ -67,7 +66,6 @@ app.post('/api/persons', (req, res) => {
     console.log(`-${savedPerson.name} is sucefully added!!`)
     res.send(savedPerson)
   })
-  // persons = persons.concat(person)
 })
 
 const PORT = process.env.PORT
