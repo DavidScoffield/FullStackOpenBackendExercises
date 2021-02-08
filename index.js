@@ -33,7 +33,8 @@ app.get('/api/persons/:id', (req, res) => {
     .then((foundPerson) => {
       res.json(foundPerson)
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error.message)
       res.status(404).end()
     })
 })
