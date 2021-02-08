@@ -46,7 +46,7 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-  const id = generateRandomID()
+  // const id = generateRandomID()
   let person = req.body
 
   if (!(person.name && person.number)) {
@@ -55,17 +55,19 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
-  if (isInDiary(person.name)) {
-    return res.status(404).json({
-      error: 'name must be unique',
-    })
-  }
+  // if (isInDiary(person.name)) {
+  //   return res.status(404).json({
+  //     error: 'name must be unique',
+  //   })
+  // }
 
-  person = { ...person, id }
+  person = new Person({ ...person })
 
-  persons = persons.concat(person)
-  console.log(`-${person.name} is sucefully added!!`)
-  res.send(person)
+  person.save().then((savedPerson) => {
+    console.log(`-${savedPerson.name} is sucefully added!!`)
+    res.send(savedPerson)
+  })
+  // persons = persons.concat(person)
 })
 
 const PORT = process.env.PORT
