@@ -25,7 +25,7 @@ app.get('/info', (req, res) => {
                   <p>${new Date()} </p>`
       res.send(info)
     })
-    .catch((err) => console.log('Error:', error.message))
+    .catch((err) => console.log('Error:', err.message))
 })
 
 app.get('/api/persons/:id', (req, res) => {
