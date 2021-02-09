@@ -56,7 +56,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .catch((error) => next(error))
 })
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   let person = req.body
 
   if (!(person.name && person.number)) {
@@ -77,7 +77,7 @@ app.post('/api/persons', (req, res) => {
     .save()
     .then((savedPerson) => {
       console.log(` ✅ ${savedPerson.name} is sucefully added!!`)
-      res.send(savedPerson)
+      res.json(savedPerson)
     })
     .catch((error) => next(error))
 })
@@ -121,7 +121,9 @@ const errorHandler = (err, req, res, next) => {
   console.log(`❌ ${err.name}, ${err.message}`)
 
   if (err.name === 'CastError') {
-    return res.status(400).send({ error: 'malformatted id' })
+    return res.status(400).json({ error: 'malformatted id' })
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message })
   }
 
   next(err)
