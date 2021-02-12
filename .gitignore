@@ -1,3 +1,9 @@
 .vscode
-/node_modules
-.env
+
+###PhoneGuide
+/PhoneGuide/node_modules
+/PhoneGuide/.env
+
+###BlogList
+/BlogList/node_modules
+/BlogList/.env
