@@ -28,6 +28,27 @@ test('obtener la cantidad correcta de blogs', async () => {
   expect(response.body).toHaveLength(helper.initializeBlogs.length)
 })
 
+test('se agrego un nuevo blog a la BD', async () => {
+  const newBlog = {
+    title: 'Marco en apuros',
+    author: 'David',
+    url: 'ficticia.com.ar',
+    likes: '1500',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-type', /application\/json/)
+
+  const response = await helper.blogsInDb()
+  expect(response).toHaveLength(helper.initializeBlogs.length + 1)
+
+  const titles = response.map((r) => r.title)
+  expect(titles).toContain('Marco en apuros')
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
