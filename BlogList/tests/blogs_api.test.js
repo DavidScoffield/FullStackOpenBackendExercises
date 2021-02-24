@@ -49,6 +49,19 @@ test('se agrego un nuevo blog a la BD', async () => {
   expect(titles).toContain('Marco en apuros')
 })
 
+test('falta de title y url genera 404', async () => {
+  const newBlog = {
+    title: 'Marco en apuros',
+    likes: '1500',
+  }
+
+  await api.post('/api/blogs').send(newBlog).expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(helper.initializeBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
